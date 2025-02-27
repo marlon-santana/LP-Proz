@@ -80,24 +80,25 @@ const closeButton = document.querySelector('.close-btn'); // Botão de fechar
 const closeTopButton = document.querySelector('.close-top-btn'); // Botão "X" no topo
 const submitButton = document.querySelector('.bottom-sheet-content button[type="submit"]'); // Botão de enviar
 const bottomSheetContent = document.querySelector('.bottom-sheet-content'); // Conteúdo do bottom sheet
-const successModal = document.querySelector('.success-modal'); // Modal de sucesso
+const successModal = document.querySelector('.success-modal'); 
 const submitButtom = document.querySelector('.submit');
+// const checkBox = document.querySelector('.state-button');
 
 // Abre o Bottom Sheet ao clicar no botão CTA
 ctaButton.addEventListener('click', () => {
-bottomSheet.classList.add('active'); // Adiciona a classe 'active' para mostrar o bottom sheet
-overlay.classList.add('active'); // Adiciona a classe 'active' para mostrar o overlay
+bottomSheet.classList.add('active'); 
+// overlay.classList.add('active'); 
 });
 
 
 
 // Fecha o Bottom Sheet ao clicar no botão "X" no topo
 closeTopButton.addEventListener('click', () => {
-bottomSheet.classList.remove('active'); // Remove a classe 'active' para esconder o bottom sheet
-bottomSheet.classList.remove('full'); // Remove a classe 'full' para esconder o bottom sheet
-bottomSheet.classList.remove('success'); // Remove a classe 'success' para esconder o bottom sheet
-overlay.classList.remove('active'); // Remove a classe 'active' para esconder o overlay
-successModal.classList.remove('active'); // Remove a classe 'active' para esconder o modal de sucesso
+bottomSheet.classList.remove('active');  
+bottomSheet.classList.remove('full');
+bottomSheet.classList.remove('success');
+overlay.classList.remove('active'); 
+successModal.classList.remove('active'); 
 });
 
 
@@ -121,16 +122,77 @@ function openSuccessModal() {
 // Função para fechar o modal de sucesso
 function closeSuccessModal() {
   const successModal = document.getElementById('successModal');
+  bottomSheet.classList.remove('active'); 
+  bottomSheet.classList.remove('full'); 
   successModal.classList.remove('active');
 }
 
 // Adiciona o evento de submit ao formulário
-document.getElementById('bottom-sheet').addEventListener('click', function (event) {
-  event.preventDefault();
+// document.getElementById('bottom-sheet').addEventListener('click', function (event) {
+//   event.preventDefault();
+
+//   // Aqui você pode adicionar lógica para enviar os dados do formulário (ex: via AJAX)
+//   // Por enquanto, apenas abrimos o modal de sucesso
+//   openSuccessModal();
+// });
 
 
 
-  // Aqui você pode adicionar lógica para enviar os dados do formulário (ex: via AJAX)
-  // Por enquanto, apenas abrimos o modal de sucesso
-  openSuccessModal();
+
+
+document.addEventListener("DOMContentLoaded", () => {
+  const spCheckbox = document.getElementById('sp');
+  const mgCheckbox = document.getElementById('mg');
+  const unidadesSelect = document.getElementById('unidades');
+
+  const saoPauloOptions = [
+    "Carapicuíba", "Diadema", "Grajaú", "Guaianases", "Guarulhos",
+    "Itaquera", "Jabaquara", "Mauá", "Sacomã", "Santo Amaro", "São Miguel Paulista"
+  ];
+
+  const minasGeraisOptions = [
+    "Belo Horizonte (Centro)", "Belo Horizonte (Venda Nova)", "Contagem",
+    "Divinópolis", "Montes Claros", "Ipatinga", "Juiz de Fora"
+  ];
+
+  function updateUnidadesOptions(options) {
+    unidadesSelect.innerHTML = '<option value="" disabled selected>Selecionar unidade</option>';
+    options.forEach(option => {
+      const opt = document.createElement('option');
+      opt.value = option;
+      opt.textContent = option;
+      unidadesSelect.appendChild(opt);
+    });
+  }
+
+  function uncheckOtherCheckboxes(currentCheckbox) {
+    const checkboxes = document.querySelectorAll('.state-checkbox');
+    checkboxes.forEach(checkbox => {
+      if (checkbox !== currentCheckbox) {
+        checkbox.checked = false;
+      }
+    });
+  }
+
+  spCheckbox.addEventListener('change', (event) => {
+    event.stopPropagation(); // Impede a propagação do evento
+
+    if (spCheckbox.checked) {
+      updateUnidadesOptions(saoPauloOptions);
+      uncheckOtherCheckboxes(spCheckbox);
+    } else {
+      unidadesSelect.innerHTML = '<option value="" disabled selected>Selecionar unidade</option>';
+    }
+  });
+
+  mgCheckbox.addEventListener('change', (event) => {
+    event.stopPropagation(); // Impede a propagação do evento
+
+    if (mgCheckbox.checked) {
+      updateUnidadesOptions(minasGeraisOptions);
+      uncheckOtherCheckboxes(mgCheckbox);
+    } else {
+      unidadesSelect.innerHTML = '<option value="" disabled selected>Selecionar unidade</option>';
+    }
+  });
 });
